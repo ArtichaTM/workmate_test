@@ -76,6 +76,8 @@ class StudentsInfoPrinter:
         assert len(separator) == 1
         assert isinstance(data, (list, tuple, dict)), type(data)
         print(separator, end='')
+        if isinstance(data, dict):
+            data = data.values()
         if alignments is None:
             alignments = ('>', ) * len(data)
         assert len(self.sizes) == len(alignments) == len(data), (
