@@ -109,5 +109,5 @@ class StudentsInfoPrinter:
         for inner_iterator in self.students.values():
             for inner_iterator in inner_iterator.values():
                 for student in inner_iterator:
-                    self._print_data_line(list(student.values()))
+                    self._print_data_line(student)
                     self._print_separator()

@@ -38,7 +38,9 @@ def calculate(
 
 
 def _mean(values: ALLOWED_LISTS) -> ALLOWED_TYPES:
-    return calculate(mean, values)
+    return calculate(
+        mean,  # type: ignore
+    values)
 
 
 def _min(values: ALLOWED_LISTS) -> ALLOWED_TYPES:
