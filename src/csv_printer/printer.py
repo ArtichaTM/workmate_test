@@ -74,7 +74,7 @@ class StudentsInfoPrinter:
         assert self.sizes is not None
         assert isinstance(separator, str)
         assert len(separator) == 1
-        assert isinstance(data, (list, tuple)), type(data)
+        assert isinstance(data, (list, tuple, dict)), type(data)
         print(separator, end='')
         if alignments is None:
             alignments = ('>', ) * len(data)
