@@ -2,7 +2,11 @@ from typing import Sequence
 from datetime import date
 from dataclasses import fields, astuple
 
-from .reader import StudentInfo, StudentsInfo
+from .reader import (
+    StudentInfo,
+    StudentExamsInfo,
+    StudentsInfo
+)
 
 
 class StudentsInfoPrinter:
@@ -32,12 +36,13 @@ class StudentsInfoPrinter:
         result: dict[str, int] = {
             field.name: len(field.name) for field in student_fields
         }
-        for student in self.students.students:
-            for field in student_fields:
-                name = field.name
-                result[name] = max(result[name], len(str(getattr(
-                    student, name
-                ))))
+        for student_session in self.students.students.values():
+            for student in student_session.exams.values():
+                for field in student_fields:
+                    name = field.name
+                    result[name] = max(result[name], len(str(getattr(
+                        student, name
+                    ))))
         self.sizes = {k: v+2 for k, v in result.items()}
 
     def _print_separator(
@@ -57,16 +62,14 @@ class StudentsInfoPrinter:
 
     def _print_data_line(
         self,
-        data: Sequence[str] | StudentInfo,
+        data: Sequence[str] | StudentsInfo,
         alignments: Sequence[str] | None = None,
-        separator: str = '|'
+        separator: str = '|',
     ) -> None:
         assert self.sizes is not None
         assert isinstance(separator, str)
         assert len(separator) == 1
-        assert isinstance(data, (list, StudentInfo))
-        if isinstance(data, StudentInfo):
-            data = astuple(data)
+        assert isinstance(data, (list, tuple)), type(data)
         print(separator, end='')
         if alignments is None:
             alignments = self.alignments
@@ -85,15 +88,22 @@ class StudentsInfoPrinter:
             )
         print()
 
-    def print(self) -> None:
+    def print(
+        self,
+        columns: tuple[str, ...] | None = None
+    ) -> None:
+        if columns is None:
+            columns = tuple(StudentsInfo.columns)
+        assert isinstance(columns, tuple)
+        assert all((isinstance(i, str) for i in columns))
         self._init_sizes()
         self._print_separator()
-        if self.students.headers is not None:
+        if self.students.columns is not None:
             self._print_data_line(
-                self.students.headers,
-                alignments=('^', ) * len(self.students.headers)
+                self.students.columns,
+                alignments=('^', ) * len(self.students.columns)
             )
             self._print_separator(line='=')
-        for line in self.students.students:
-            self._print_data_line(line)
+        for line in self.students.students.values():
+            self._print_data_line(line.get_row())
             self._print_separator()
