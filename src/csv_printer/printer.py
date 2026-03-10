@@ -1,48 +1,53 @@
-from typing import Sequence
+from typing import Generator, Sequence
 from datetime import date
-from dataclasses import fields, astuple
 
-from .reader import (
-    StudentInfo,
-    StudentExamsInfo,
-    StudentsInfo
-)
+from .reader import StudentExam
 
 
 class StudentsInfoPrinter:
     __slots__ = (
         'students',
+        'columns',
         'sizes',
-        'alignments',
     )
-    students: StudentsInfo
+    students: dict[str, dict[str, list[StudentExam]]]
     sizes: dict[str, int] | None
-    alignments: list[str]
 
     def __init__(
         self,
-        students: StudentsInfo
+        students: dict[str, dict[str, list[StudentExam]]],
+        columns: Sequence[str]
     ) -> None:
+        assert all((isinstance(i, str) for i in columns))
         self.students = students
+        self.columns = columns
         self.sizes = None
-        self.alignments = [
-            '>'
-        ] * len(students.students)
-    
+
+    def _column_names(self) -> Generator[str, None, None]:
+        values = set()
+        for sessions in self.students.values():
+            for student_list in sessions.values():
+                for student in student_list:
+                    for field_name in student:
+                        yield field_name
+                    break
+                break
+            break
+
     def _init_sizes(self) -> None:
         if self.sizes:
             return
-        student_fields = fields(StudentInfo)
         result: dict[str, int] = {
-            field.name: len(field.name) for field in student_fields
+            field: len(field) for field in self._column_names()
         }
-        for student_session in self.students.students.values():
-            for student in student_session.exams.values():
-                for field in student_fields:
-                    name = field.name
-                    result[name] = max(result[name], len(str(getattr(
-                        student, name
-                    ))))
+        for sessions in self.students.values():
+            for student_list in sessions.values():
+                for student in student_list:
+                    for field_name, field_value in student.items():
+                        result[field_name] = max(
+                            result[field_name],
+                            len(str(field_value))
+                        )
         self.sizes = {k: v+2 for k, v in result.items()}
 
     def _print_separator(
@@ -62,7 +67,7 @@ class StudentsInfoPrinter:
 
     def _print_data_line(
         self,
-        data: Sequence[str] | StudentsInfo,
+        data: Sequence[str] | StudentExam,
         alignments: Sequence[str] | None = None,
         separator: str = '|',
     ) -> None:
@@ -72,9 +77,13 @@ class StudentsInfoPrinter:
         assert isinstance(data, (list, tuple)), type(data)
         print(separator, end='')
         if alignments is None:
-            alignments = self.alignments
+            alignments = ('>', ) * len(data)
+        assert len(self.sizes) == len(alignments) == len(data), (
+            f"{len(self.sizes)}=={len(alignments)}=={len(data)}"
+        )
         for length, align, line in zip(
-            self.sizes.values(), alignments, data
+            self.sizes.values(), alignments, data,
+            strict=True
         ):
             if isinstance(line, date):
                 string = line.strftime('%Y-%m-%d')
@@ -88,22 +97,17 @@ class StudentsInfoPrinter:
             )
         print()
 
-    def print(
-        self,
-        columns: tuple[str, ...] | None = None
-    ) -> None:
-        if columns is None:
-            columns = tuple(StudentsInfo.columns)
-        assert isinstance(columns, tuple)
-        assert all((isinstance(i, str) for i in columns))
+    def print(self) -> None:
         self._init_sizes()
         self._print_separator()
-        if self.students.columns is not None:
-            self._print_data_line(
-                self.students.columns,
-                alignments=('^', ) * len(self.students.columns)
-            )
-            self._print_separator(line='=')
-        for line in self.students.students.values():
-            self._print_data_line(line.get_row())
-            self._print_separator()
+        columns = tuple(self._column_names())
+        self._print_data_line(
+            columns,
+            alignments=('^', ) * len(columns)
+        )
+        self._print_separator(line='=')
+        for inner_iterator in self.students.values():
+            for inner_iterator in inner_iterator.values():
+                for student in inner_iterator:
+                    self._print_data_line(list(student.values()))
+                    self._print_separator()

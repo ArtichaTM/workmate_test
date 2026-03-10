@@ -6,7 +6,7 @@ from pathlib import Path
 @dataclass(frozen=True, kw_only=True, slots=True)
 class RunInfo:
     files: tuple[Path, ...]
-    additional_columns: tuple[str, ...]
+    columns: tuple[str, ...]
 
 
 def _create_parser() -> ArgumentParser:
@@ -23,7 +23,7 @@ def _create_parser() -> ArgumentParser:
         nargs="+",
         type=str,
         help="Additional columns",
-        default=()
+        default=('name', 'coffee_spent', 'mean_coffee_spent')
     )
     return parser
 
@@ -34,6 +34,6 @@ def create_run_info() -> RunInfo:
     files = ns.files
     report = ns.report
     return RunInfo(
-        files=files,
-        additional_columns=report
+        files=tuple(files),
+        columns=tuple(report)
     )
