@@ -49,6 +49,14 @@ class StudentExamsInfo:
             self.exams[other_exam] = other_student_session
         return self
 
+    def _first_student(self) -> StudentInfo:
+        return next(iter(self.exams.values()))
+
+    def _get_column(self, column_name: str):
+        first = self._first_student()
+        # TODO: add `median_*`, `max_*` and other
+        return getattr(first, column_name)
+
     def get_row(
         self,
         columns: tuple[str, ...] | None = None
