@@ -23,7 +23,7 @@ def _create_parser() -> ArgumentParser:
         nargs="+",
         type=str,
         help="Additional columns",
-        default=('name', 'coffee_spent', 'mean_coffee_spent')
+        default=('coffee_spent', 'mean_coffee_spent')
     )
     return parser
 

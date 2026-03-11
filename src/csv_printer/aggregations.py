@@ -21,10 +21,10 @@ def calculate(
     value0 = values[0]
     if isinstance(value0, int):
         assert all((isinstance(i, int) for i in values))
-        return agg(values)
+        return round(agg(values), ndigits=2)
     if isinstance(value0, float):
         assert all((isinstance(i, float) for i in values))
-        return agg(values)
+        return round(agg(values), ndigits=2)
     if isinstance(value0, date):
         assert all((isinstance(i, date) for i in values))
         return date.fromordinal(
@@ -55,6 +55,7 @@ def _max(values: ALLOWED_LISTS) -> ALLOWED_TYPES:
 OPERATIONS = {
     'average': _mean,
     'mean': _mean,
+    'median': _mean,
     'min': _min,
     'max': _max
 }
