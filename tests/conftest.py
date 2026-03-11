@@ -1,3 +1,4 @@
 pytest_plugins = [
-    "tests.reader.fixtures"
+    "tests.reader.fixtures",
+    "tests.printer.fixtures",
 ]

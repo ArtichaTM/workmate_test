@@ -26,6 +26,7 @@ class StudentsInfoPrinter:
         students: dict[str, dict[str, list[StudentExam]]],
         columns: Sequence[str]
     ) -> None:
+        assert columns
         assert all((isinstance(i, str) for i in columns))
         self.students = students
         self.global_students = {name: dict() for name in self.students}
