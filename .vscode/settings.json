@@ -5,8 +5,11 @@
         "**/.hg": true,
         "**/.DS_Store": true,
         "**/Thumbs.db": true,
+
         ".venv": true,
         "**/__pycache__": true,
         ".pytest_cache": true,
+        "coverage.lcov": true,
+        "uv.lock": true,
     }
 }
