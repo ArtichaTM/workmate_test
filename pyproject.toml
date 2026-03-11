@@ -17,7 +17,7 @@ requires-python = ">=3.10"
 dependencies = []
 
 [project.scripts]
-mgost = "csv_printer:main"
+csv_printer = "csv_printer:cli_main"
 
 [dependency-groups]
 dev = [
