@@ -10,7 +10,6 @@ def write_csv(
     assert isinstance(content, str)
     assert isinstance(path, Path)
     assert path.exists()
-    assert path.is_file()
     content = content.strip('\n\t ')
     csv_file = path / "grades.csv"
     csv_file.write_text(content, encoding="utf-8")

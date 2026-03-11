@@ -30,7 +30,7 @@ def calculate(
             round(float(
                 agg(
                     i.toordinal() for i in values  # type:ignore
-                ) / len(values)
+                )
             ))
         )
     assert None, type(value0)

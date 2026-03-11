@@ -10,3 +10,10 @@ def one_student_students(
     one_student_path: Path
 ) -> dict[str, dict[str, list[StudentExam]]]:
     return read_csv(one_student_path)
+
+
+@pytest.fixture
+def one_student_2exams_students(
+    one_student_2exams_path: Path
+) -> dict[str, dict[str, list[StudentExam]]]:
+    return read_csv(one_student_2exams_path)
