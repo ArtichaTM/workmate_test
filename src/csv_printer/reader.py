@@ -32,12 +32,21 @@ def parse_row(row) -> StudentExam:
 
 def read_csv(*paths: Path) -> dict[str, dict[str, list[StudentExam]]]:
     output: dict[str, dict[str, list[StudentExam]]] = dict()
+    seen: set[tuple] = set()
     for path in paths:
         assert isinstance(path, Path)
         with open(path, newline='', encoding="utf-8") as f:
             reader = csv.DictReader(f)
             for row in reader:
                 student = parse_row(row)
+                values = tuple(student.values())
+                if values in seen:
+                    logger.warning(
+                        f"Студент {student['name']} от "
+                        f"{student['date']} повторяется"
+                    )
+                    continue
+                seen.add(values)
                 name = student['name']
                 exam = student['exam']
                 if name not in output:
