@@ -28,9 +28,9 @@ def _create_parser() -> ArgumentParser:
     return parser
 
 
-def create_run_info() -> RunInfo:
+def create_run_info(args=None) -> RunInfo:
     parser = _create_parser()
-    ns = parser.parse_args()
+    ns = parser.parse_args(args)
     files = ns.files
     report = ns.report
     return RunInfo(

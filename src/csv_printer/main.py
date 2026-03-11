@@ -7,8 +7,8 @@ from .reader import read_csv
 logger = getLogger()
 
 
-def cli_main() -> None:
-    return main(create_run_info())
+def cli_main(args=None) -> None:
+    return main(create_run_info(args))
 
 
 def main(
@@ -24,7 +24,7 @@ def main(
         else:
             new_paths.append(path)
     if not new_paths:
-        print("Нет валидных файлов. Выход")
+        logger.error("Нет валидных файлов. Выход")
         return
     students = read_csv(*new_paths)
     printer = StudentsInfoPrinter(students, run_info.columns)
