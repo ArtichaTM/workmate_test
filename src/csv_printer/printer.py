@@ -30,7 +30,10 @@ class StudentsInfoPrinter:
         assert all((isinstance(i, str) for i in columns))
         self.students = students
         self.global_students = {name: dict() for name in self.students}
-        self.columns = tuple(columns)
+        if 'name' in columns:
+            self.columns = tuple(columns)
+        else:
+            self.columns = ('name', *columns)
         # Getting fields of first name of first exam of StudentExam
         self.simple_columns = {
             name for name in next(iter(
@@ -49,10 +52,10 @@ class StudentsInfoPrinter:
     def _init_sizes(self) -> None:
         if self.sizes:
             return
-        result: dict[str, int] = {
+        result: dict[str, int] = {'name': 4}
+        result.update({
             name: len(name) for name in self._get_global_field_names()
-        }
-        result['name'] = 0
+        })
         for name, values in self.global_students.items():
             assert isinstance(name, str)
             result['name'] = max(
@@ -105,8 +108,8 @@ class StudentsInfoPrinter:
                 string = line.strftime('%Y-%m-%d')
             else:
                 string = str(line)
-            string = string[:length]
             length -= 2
+            string = string[:length]
             print(
                 f" {string:{align}{length}} ",
                 end=separator

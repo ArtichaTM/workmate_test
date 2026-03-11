@@ -19,7 +19,10 @@
             "args": [
                 "--files",
                 "temp/math.csv",
-                "temp/physics.csv"
+                "temp/physics.csv",
+                "--report",
+                "mean_coffee_spent",
+                "min_sleep_hours"
             ],
             "cwd": "${workspaceFolder}"
         }
