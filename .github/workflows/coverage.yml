@@ -18,7 +18,12 @@ jobs:
       run: uv sync --dev
     - name: Testing code with coverage
       run: uv run -m coverage run -m pytest
-    - name: Collecting coverage
-      run: uv run -m coverage lcov
-    - name: Coveralls
+    - name: Run tests with coverage
+      run: |
+        uv run -m coverage run -m pytest
+        uv run -m coverage xml
+    - name: Upload coverage to Coveralls
       uses: coverallsapp/github-action@v2
+      with:
+        format: cobertura
+        file: coverage.xml
