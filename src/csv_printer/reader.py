@@ -1,17 +1,16 @@
 import csv
-from datetime import date, datetime
-from pathlib import Path
+from datetime import date as _date
+from datetime import datetime
 from logging import getLogger
+from pathlib import Path
 from typing import TypedDict
-
-from .aggregations import OPERATIONS
 
 logger = getLogger()
 
 
 class StudentExam(TypedDict):
     name: str
-    date: date
+    date: _date
     coffee_spent: int
     sleep_hours: float
     study_hours: int
