@@ -1,3 +1,7 @@
+[![Flake8](https://github.com/ArtichaTM/workmate_test/actions/workflows/flake8.yml/badge.svg)](https://github.com/ArtichaTM/workmate_test/actions/workflows/flake8.yml)
+[![Coverage](https://coveralls.io/repos/github/ArtichaTM/workmate_test/badge.svg)](https://coveralls.io/github/ArtichaTM/workmate_test)
+[![Tests](https://github.com/ArtichaTM/workmate_test/actions/workflows/tests.yml/badge.svg)](https://github.com/ArtichaTM/workmate_test/actions/workflows/tests.yml)
+
 # Описание
 Работа выполнялась с целью упрощения расширения функционала в сторону каких-то статистик или добавления новых `float|int|date` колонок.
 - Колонка `name` (в csv `student`) стала обязательной как primary key.
