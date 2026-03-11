@@ -2,6 +2,7 @@ from pathlib import Path
 
 import pytest
 
+
 @pytest.fixture
 def one_student_path(tmp_path: Path):
     """Creates csv with one student"""

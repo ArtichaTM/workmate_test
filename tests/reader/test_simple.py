@@ -1,9 +1,6 @@
 from pathlib import Path
-from datetime import datetime, date
+from datetime import date
 
-import pytest
-
-from .fixtures import one_student_path
 from csv_printer.reader import read_csv
 
 
