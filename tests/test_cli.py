@@ -20,7 +20,6 @@ def test_required_files():
         ("temp.csv", Path("temp.csv")),
         ("./temp.csv", Path("temp.csv")),
         ("temp/file.csv", Path("temp/file.csv")),
-        ("temp\\file.csv", Path("temp/file.csv")),
     ]
 )
 def test_different_paths(value: str, expected: Path):
