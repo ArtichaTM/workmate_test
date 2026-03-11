@@ -2,7 +2,6 @@ from datetime import date
 from statistics import mean
 from typing import Callable, Sequence
 
-
 ALLOWED_TYPES = float | int | date
 ALLOWED_LISTS = Sequence[float] | Sequence[int] | Sequence[date]
 
@@ -30,7 +29,7 @@ def calculate(
         return date.fromordinal(
             round(float(
                 agg(
-                    i.toordinal() for i in values # type:ignore
+                    i.toordinal() for i in values  # type:ignore
                 ) / len(values)
             ))
         )
@@ -40,7 +39,8 @@ def calculate(
 def _mean(values: ALLOWED_LISTS) -> ALLOWED_TYPES:
     return calculate(
         mean,  # type: ignore
-    values)
+        values
+    )
 
 
 def _min(values: ALLOWED_LISTS) -> ALLOWED_TYPES:
@@ -49,7 +49,6 @@ def _min(values: ALLOWED_LISTS) -> ALLOWED_TYPES:
 
 def _max(values: ALLOWED_LISTS) -> ALLOWED_TYPES:
     return calculate(max, values)
-
 
 
 OPERATIONS = {

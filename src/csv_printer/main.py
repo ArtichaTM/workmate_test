@@ -1,9 +1,8 @@
 from logging import getLogger
-from pathlib import Path
 
 from .cli import RunInfo, create_run_info
-from .reader import read_csv
 from .printer import StudentsInfoPrinter
+from .reader import read_csv
 
 logger = getLogger()
 

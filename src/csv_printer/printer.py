@@ -1,10 +1,9 @@
-from typing import Callable, Generator, Sequence
 from datetime import date
 from logging import getLogger
+from typing import Callable, Generator, Sequence
 
-from .reader import StudentExam
 from .aggregations import OPERATIONS
-
+from .reader import StudentExam
 
 logger = getLogger()
 
@@ -64,7 +63,7 @@ class StudentsInfoPrinter:
                     result[value_name],
                     len(str(value))
                 )
-        self.sizes = {k: v+2 for k, v in result.items()}
+        self.sizes = {k: v + 2 for k, v in result.items()}
 
     def _print_separator(
         self,
@@ -78,7 +77,7 @@ class StudentsInfoPrinter:
         assert len(line) == 1
         print(edge, end='')
         for i in self.sizes.values():
-            print(line*i, end=edge)
+            print(line * i, end=edge)
         print()
 
     def _print_data_line(
@@ -122,7 +121,7 @@ class StudentsInfoPrinter:
     ) -> None:
         for name, sessions in self.students.items():
             global_student = self.global_students[name]
-            for exam_name, exams in sessions.items():
+            for exams in sessions.values():
                 if base_column not in exams[0]:
                     continue
                 values = [i[base_column] for i in exams]
@@ -134,7 +133,7 @@ class StudentsInfoPrinter:
                     f"Колонка {column} основывается на колонке "
                     f"{base_column}, однако она не существует"
                 )
-                for name, sessions in self.students.items():
+                for name in self.students:
                     global_student = self.global_students[name]
                     global_student[column] = None
                 return
@@ -150,7 +149,7 @@ class StudentsInfoPrinter:
                     if not column.startswith(operation_name):
                         continue
                     self._calculate_column(
-                        base_column=column[len(operation_name)+1:],
+                        base_column=column[len(operation_name) + 1:],
                         column=column,
                         operation=operation_func
                     )
