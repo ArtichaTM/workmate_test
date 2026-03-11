@@ -4,7 +4,7 @@ import pytest
 
 
 @pytest.fixture
-def one_student_path(tmp_path: Path):
+def one_student_path(tmp_path: Path) -> Path:
     """Creates csv with one student"""
     csv_content = """
 student,date,coffee_spent,sleep_hours,study_hours,mood,exam
@@ -16,7 +16,7 @@ student,date,coffee_spent,sleep_hours,study_hours,mood,exam
 
 
 @pytest.fixture
-def one_student_duplicate_path(tmp_path: Path):
+def one_student_duplicate_path(tmp_path: Path) -> Path:
     """Creates csv with one student"""
     csv_content = """
 student,date,coffee_spent,sleep_hours,study_hours,mood,exam
