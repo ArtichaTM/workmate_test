@@ -14,6 +14,7 @@
 ```bash
 uv run -m csv_printer --files temp/math.csv temp/physics.csv  # Запускает компиляцию отчётов в колонки по умолчанию `name, mean_coffee_spent`
 python -m csv_printer --files temp/math.csv temp/physics.csv  # Аналог команды выше
+csv_printer --files temp/math.csv temp/physics.csv  # Аналог команды выше, если установлен пакет python через `pyproject.toml`
 ```
 
 # Примечания
