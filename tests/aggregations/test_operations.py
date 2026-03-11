@@ -96,3 +96,25 @@ def test_operations_date(
     assert isinstance(result, type(expected)), (
         f"{type(result)} != {type(expected)}"
     )
+
+
+def test_double_operation(
+    one_student_2exams_students,
+):
+    values: dict[str, float | int] = {
+        'median_coffee_spent': 505,
+        'max_coffee_spent': 530,
+        'average_sleep_hours': (4.0 + 3.5) / 2,
+        'min_sleep_hours': 3.5,
+        'max_sleep_hours': 4,
+    }
+    printer = StudentsInfoPrinter(
+        one_student_2exams_students,
+        columns=('name', *values)
+    )
+    assert 'Алексей Смирнов' in printer.global_students
+    assert printer._validate_columns() is None
+    student = printer.global_students['Алексей Смирнов']
+    assert set(values) == set(student), "Different keys"
+    for name, real_value in student.items():
+        assert real_value == values[name]
