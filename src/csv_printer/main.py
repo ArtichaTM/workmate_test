@@ -27,5 +27,9 @@ def main(
         logger.error("Нет валидных файлов. Выход")
         return
     students = read_csv(*new_paths)
-    printer = StudentsInfoPrinter(students, run_info.columns)
+    printer = StudentsInfoPrinter(
+        students=students,
+        columns=run_info.columns,
+        sort_by=run_info.sort_by
+    )
     printer.print()

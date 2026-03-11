@@ -11,12 +11,15 @@ logger = getLogger()
 class StudentsInfoPrinter:
     __slots__ = (
         'students',
-        'simple_columns',
         'columns',
+        'sort_by',
+        'simple_columns',
         'sizes',
         'global_students'
     )
     students: dict[str, dict[str, list[StudentExam]]]
+    columns: tuple[str, ...]
+    sort_by: str
     simple_columns: set[str]
     global_students: dict[str, dict[str, int | float | date | None]]
     sizes: dict[str, int] | None
@@ -24,9 +27,12 @@ class StudentsInfoPrinter:
     def __init__(
         self,
         students: dict[str, dict[str, list[StudentExam]]],
-        columns: Sequence[str]
+        columns: Sequence[str],
+        sort_by: str = 'name',
     ) -> None:
+        assert students
         assert columns
+        assert sort_by
         assert all((isinstance(i, str) for i in columns))
         self.students = students
         self.global_students = {name: dict() for name in self.students}
@@ -34,6 +40,17 @@ class StudentsInfoPrinter:
             self.columns = tuple(columns)
         else:
             self.columns = ('name', *columns)
+        if sort_by.startswith('+'):
+            sort_by_column_name = sort_by[1:]
+        else:
+            sort_by_column_name = sort_by
+        if sort_by_column_name not in self.columns:
+            logger.warning(
+                f"Сортировка по колонке {sort_by_column_name}, "
+                "однако такой колонки нет в --report"
+            )
+            sort_by = 'name'
+        self.sort_by = sort_by
         # Getting fields of first name of first exam of StudentExam
         self.simple_columns = {
             name for name in next(iter(
@@ -98,7 +115,7 @@ class StudentsInfoPrinter:
         if alignments is None:
             alignments = ('>', ) * len(data)
         assert len(self.sizes) == len(alignments) == len(data), (
-            f"{len(self.sizes)}=={len(alignments)}=={len(data)}"
+            f"{self.sizes}=={alignments}=={data}"
         )
         for length, align, line in zip(
             self.sizes.values(), alignments, data,
@@ -163,6 +180,24 @@ class StudentsInfoPrinter:
                     f"Колонка {column} является простой, пропускается"
                 )
 
+    def _sort(self) -> None:
+        reverse = True
+        sort_by = self.sort_by
+        if sort_by.startswith('+'):
+            reverse = False
+            sort_by = sort_by[1:]
+        if sort_by == 'name':
+            def key_func(x):
+                return x[0]
+        else:
+            def key_func(x):
+                return x[1][sort_by]
+        self.global_students = dict(sorted(
+            self.global_students.items(),
+            key=key_func,
+            reverse=reverse
+        ))
+
     def print(self) -> None:
         self._validate_columns()
         self._init_sizes()
@@ -172,6 +207,7 @@ class StudentsInfoPrinter:
             alignments=('^', ) * len(self.columns)
         )
         self._print_separator(line='=')
+        self._sort()
         for name, values in self.global_students.items():
             self._print_data_line([name, *values.values()])
             self._print_separator()

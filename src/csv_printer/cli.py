@@ -7,6 +7,7 @@ from pathlib import Path
 class RunInfo:
     files: tuple[Path, ...]
     columns: tuple[str, ...]
+    sort_by: str
 
 
 def _create_parser() -> ArgumentParser:
@@ -25,6 +26,12 @@ def _create_parser() -> ArgumentParser:
         help="Additional columns",
         default=('coffee_spent', 'mean_coffee_spent')
     )
+    parser.add_argument(
+        "--sort",
+        type=str,
+        help='Sort by column. Use the "+" prefix for ascending order',
+        default='name'
+    )
     return parser
 
 
@@ -35,5 +42,6 @@ def create_run_info(args=None) -> RunInfo:
     report = ns.report
     return RunInfo(
         files=tuple(files),
-        columns=tuple(report)
+        columns=tuple(report),
+        sort_by=ns.sort
     )
