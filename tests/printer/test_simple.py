@@ -22,13 +22,15 @@ def test_object_creation(one_student_students) -> None:
 def test_different_columns(one_student_students) -> None:
     # 0 columns
     with pytest.raises(AssertionError):
-        StudentsInfoPrinter(
+        printer = StudentsInfoPrinter(
             one_student_students,
             columns=()
         )
 
     # Only name
-    StudentsInfoPrinter(
+    printer = StudentsInfoPrinter(
         one_student_students,
         columns=('name', )
     )
+    assert len(tuple(printer._get_global_field_names())) == 0
+    assert 'name' not in printer._get_global_field_names()

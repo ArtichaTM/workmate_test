@@ -10,6 +10,10 @@ def test_different_operations(one_student_students) -> None:
             one_student_students,
             columns=('name', column_name)
         )
+
+        # Before new columns created
+        assert 'name' in printer.columns
+        assert 'name' not in printer._get_global_field_names()
         assert column_name not in printer._get_global_field_names(
         ), tuple(
             printer._get_global_field_names()
@@ -17,7 +21,12 @@ def test_different_operations(one_student_students) -> None:
         assert column_name in printer.columns
 
         assert printer._validate_columns() is None
+
+        # After new columns is created
+        assert 'name' in printer.columns
+        assert 'name' not in printer._get_global_field_names()
         assert column_name in printer._get_global_field_names(
         ), tuple(
             printer._get_global_field_names()
         )
+        assert column_name in printer.columns
