@@ -29,3 +29,8 @@ dev = [
 
 [tool.isort]
 multi_line_output = 5
+
+[tool.coverage.run]
+omit = [
+  "tests/*"
+]

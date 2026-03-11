@@ -10,3 +10,7 @@ wheels/
 .venv
 uv.lock
 temp/
+
+# Tests
+.coverage
+htmlcov/
