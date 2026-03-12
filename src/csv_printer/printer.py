@@ -185,12 +185,20 @@ class StudentsInfoPrinter:
                     if not result:
                         invalid_indexes.append(i)
                     break
+            elif column == 'name':
+                continue
             # Simple column?
-            elif column in self.simple_columns and column != 'name':
+            elif column in self.simple_columns:
                 logger.warning(
                     f"Колонка {column} является простой, пропускается"
                 )
                 invalid_indexes.append(i)
+            else:
+                logger.warning(
+                    f"Неизвестная колонка {column}"
+                )
+                invalid_indexes.append(i)
+
         self.columns = tuple(self.columns[i] for i in range(len(self.columns))
                              if i not in invalid_indexes)
 
