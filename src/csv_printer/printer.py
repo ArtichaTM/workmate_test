@@ -199,7 +199,8 @@ class StudentsInfoPrinter:
                 )
                 invalid_indexes.append(i)
 
-        self.columns = tuple(self.columns[i] for i in range(len(self.columns))
+        self.columns = tuple(self.columns[i]
+                             for i in range(len(self.columns))
                              if i not in invalid_indexes)
 
     def _sort(self) -> None:
