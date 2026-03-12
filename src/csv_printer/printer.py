@@ -139,25 +139,21 @@ class StudentsInfoPrinter:
         base_column: str,
         column: str,
         operation: Callable
-    ) -> None:
-        for name, sessions in self.students.items():
+    ) -> bool:
+        for name, subjects in self.students.items():
             global_student = self.global_students[name]
-            for exams in sessions.values():
-                if base_column not in exams[0]:
-                    continue
-                values = [i[base_column] for i in exams]
-                assert column not in global_student
-                global_student[column] = operation(values)
-                break
-            else:
+            try:
+                values = [i[base_column]
+                          for exams in subjects.values()
+                          for i in exams]
+            except KeyError:
                 logger.error(
                     f'Колонка "{column}" основывается на колонке '
                     f'"{base_column}", однако она не существует'
                 )
-                for name in self.students:
-                    global_student = self.global_students[name]
-                    global_student[column] = None
-                return
+                return False
+            global_student[column] = operation(values)
+        return True
 
     def _validate_columns(self) -> None:
         operations = tuple(f"{i}_" for i in OPERATIONS)
@@ -181,13 +177,16 @@ class StudentsInfoPrinter:
                 for operation_name, operation_func in OPERATIONS.items():
                     if not column.startswith(operation_name):
                         continue
-                    self._calculate_column(
+                    result = self._calculate_column(
                         base_column=column[len(operation_name) + 1:],
                         column=column,
                         operation=operation_func
                     )
+                    if not result:
+                        invalid_indexes.append(i)
+                    break
             # Simple column?
-            if column in self.simple_columns and column != 'name':
+            elif column in self.simple_columns and column != 'name':
                 logger.warning(
                     f"Колонка {column} является простой, пропускается"
                 )
