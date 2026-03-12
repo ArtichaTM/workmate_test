@@ -151,8 +151,8 @@ class StudentsInfoPrinter:
                 break
             else:
                 logger.error(
-                    f"Колонка {column} основывается на колонке "
-                    f"{base_column}, однако она не существует"
+                    f'Колонка "{column}" основывается на колонке '
+                    f'"{base_column}", однако она не существует'
                 )
                 for name in self.students:
                     global_student = self.global_students[name]
@@ -163,7 +163,19 @@ class StudentsInfoPrinter:
         operations = tuple(f"{i}_" for i in OPERATIONS)
         for name in self.students:
             self.global_students[name] = dict()
-        for column in self.columns:
+        invalid_indexes: list[int] = []
+        seen: set[str] = set()
+
+        for i, column in enumerate(self.columns):
+            if column in seen:
+                logger.warning(
+                    f'Колонка "{column}" повторяется, '
+                    "оставлено только первое вхождение"
+                )
+                invalid_indexes.append(i)
+                continue
+            seen.add(column)
+
             # Column needs calculation
             if column.startswith(operations):
                 for operation_name, operation_func in OPERATIONS.items():
@@ -175,10 +187,13 @@ class StudentsInfoPrinter:
                         operation=operation_func
                     )
             # Simple column?
-            if column in self.simple_columns:
+            if column in self.simple_columns and column != 'name':
                 logger.warning(
                     f"Колонка {column} является простой, пропускается"
                 )
+                invalid_indexes.append(i)
+        self.columns = tuple(self.columns[i] for i in range(len(self.columns))
+                             if i not in invalid_indexes)
 
     def _sort(self) -> None:
         reverse = True

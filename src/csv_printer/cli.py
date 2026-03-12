@@ -24,7 +24,7 @@ def _create_parser() -> ArgumentParser:
         nargs="+",
         type=str,
         help="Additional columns",
-        default=('coffee_spent', 'mean_coffee_spent')
+        default=('mean_coffee_spent', )
     )
     parser.add_argument(
         "--sort",
