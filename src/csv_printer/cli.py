@@ -30,7 +30,7 @@ def _create_parser() -> ArgumentParser:
         "--sort",
         type=str,
         help='Sort by column. Use the "+" prefix for ascending order',
-        default='name'
+        default='+name'
     )
     return parser
 
